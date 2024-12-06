@@ -26,3 +26,7 @@ version_variable = "pyproject.toml:version"
 version_toml = [ 
 "pyproject.toml:tool.poetry.version",
 ]
+
+[tool.semantic_release.group]
+production = ["master"]  
+staging = ["draft"] 
