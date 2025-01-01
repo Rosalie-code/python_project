@@ -1,1 +1,0 @@
-print('this is a test to check if semantic release is working')
