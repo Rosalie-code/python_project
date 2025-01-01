@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "python_project"
-version = "0.0.1"
+version = "0.0.2"
 description = "This project is based on pybacktestchain but new functionalities have been added!"
 authors = ["Rosalie Dechance"]
 license = "MIT"
