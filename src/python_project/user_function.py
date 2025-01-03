@@ -70,4 +70,8 @@ def get_initial_parameter():
     
         except ValueError:
             print("Invalid input. Investment and threshold has to be numeric values and dates has to be in the format YYY-MM-DD")
+<<<<<<< HEAD
   
+=======
+        
+>>>>>>> 8c3a1072a4949f45778e06bdbae300a0703b158b
