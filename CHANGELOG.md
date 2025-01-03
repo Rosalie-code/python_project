@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.0 (2025-01-03)
+
+### Features
+
+- **python_project**: Begin to test, still need to fix some issues
+  ([`793b998`](https://github.com/Rosalie-code/python_project/commit/793b998f3d552077bac4113897106144d969da07))
+
+
 ## v0.0.2 (2025-01-01)
 
 ### Bug Fixes
