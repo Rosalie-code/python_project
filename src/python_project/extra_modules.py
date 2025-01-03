@@ -24,56 +24,7 @@ UNIVERSE_SEC = list(StockMapper().ticker_to_cik.keys())
 # Classes 
 #---------------------------------------------------------
 
-# Class that represents the data used in the backtest. 
-@dataclass
-class DataModule:
-    data: pd.DataFrame
-
-# Interface for the information set 
-@dataclass
-class Information:
-    s: timedelta = timedelta(days=360) # Time step (rolling window)
-    data_module: DataModule = None # Data module
-    time_column: str = 'Date'
-    company_column: str = 'ticker'
-    adj_close_column: str = 'Close'
-
-    def slice_data(self, t : datetime):
-
-        # Get the data module 
-        data = self.data_module.data
-        # Get the time step 
-        s = self.s
-
-        # Convert both `t` and the data column to timezone-aware, if needed
-        if t.tzinfo is not None:
-            # If `t` is timezone-aware, make sure data is also timezone-aware
-            data[self.time_column] = pd.to_datetime(data[self.time_column]).dt.tz_localize(t.tzinfo.zone, ambiguous='NaT', nonexistent='NaT')
-        else:
-            # If `t` is timezone-naive, ensure the data is timezone-naive as well
-            data[self.time_column] = pd.to_datetime(data[self.time_column]).dt.tz_localize(None)
-        
-        # Get the data only between t-s and t
-        data = data[(data[self.time_column] >= t - s) & (data[self.time_column] < t)]
-        return data
-
-    def get_prices(self, t : datetime):
-        # gets the prices at which the portfolio will be rebalanced at time t 
-        data = self.slice_data(t)
-        
-        # get the last price for each company
-        prices = data.groupby(self.company_column)[self.adj_close_column].last()
-        # to dict, ticker as key price as value 
-        prices = prices.to_dict()
-        return prices
-
-    def compute_information(self, t : datetime):  
-        pass
-
-    def compute_portfolio(self, t : datetime,  information_set : dict):
-        pass
-    
-    
+# Class that represents the data used in the backtest.   
 
 class RiskParity(Information):
     def compute_portfolio(self, t: datetime, information_set):
