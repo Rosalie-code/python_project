@@ -6,14 +6,11 @@ from dataclasses import dataclass
 from datetime import datetime
 
 import os 
-import pickle
 from pybacktestchain.data_module import UNIVERSE_SEC, get_stocks_data, DataModule, Information
 from pybacktestchain.broker import Position, StopLoss, RebalanceFlag, Broker
 from pybacktestchain.utils import generate_random_name
-from pybacktestchain.blockchain import Block, Blockchain
 from numba import jit 
 
-from user_function import strategy_choice, get_initial_parameter
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -23,13 +20,12 @@ from datetime import timedelta, datetime
 # Classes
 #---------------------------------------------------------
 
-
-
-class CustomBroker(Broker):   
+class CustomBroker(Broker): 
+# We modify the execute_portfolio function from pybacktestchain.broker to improve it: we add 2 counters to count the number of time we sell and buy. 
+# The function returns the number of time we sell and buy and the total value of the portfolio.
     def execute_portfolio(self, portfolio: dict, prices: dict, date: datetime):
-
-        nb_buy = 0 #modification
-        nb_sell = 0  #modification    
+        nb_buy = 0 
+        nb_sell = 0      
         """Executes the trades for the portfolio based on the generated weights."""
         # First, handle all the sell orders to free up cash
         for ticker, weight in portfolio.items():
@@ -38,7 +34,7 @@ class CustomBroker(Broker):
                 if self.verbose:
                     logging.warning(f"Price for {ticker} not available on {date}")
                 continue
-            
+
             total_value = self.get_portfolio_value(prices)
             target_value = total_value * weight
             current_value = self.positions.get(ticker, Position(ticker, 0, 0)).quantity * price
@@ -48,7 +44,7 @@ class CustomBroker(Broker):
 
             if quantity_to_trade < 0:
                 self.sell(ticker, abs(quantity_to_trade), price, date)
-                nb_sell = nb_sell +1 #modification
+                nb_sell = nb_sell +1 
         
         # Then, handle all the buy orders, checking if there's enough cash
         for ticker, weight in portfolio.items():
@@ -71,7 +67,7 @@ class CustomBroker(Broker):
                 
                 if cost <= available_cash:
                     self.buy(ticker, quantity_to_trade, price, date)
-                    nb_buy = nb_buy +1 #modification
+                    nb_buy = nb_buy +1 
                 else:
                     if self.verbose:
                         logging.warning(f"Not enough cash to buy {quantity_to_trade} of {ticker} on {date}. Needed: {cost}, Available: {available_cash}")
@@ -81,6 +77,13 @@ class CustomBroker(Broker):
         total_value_after_execution = self.get_portfolio_value(prices) 
         return total_value_after_execution, nb_sell, nb_buy
 
+
+#Creation of a new class that computes different statistics to analyse the portfolio. The class includes the below functions:
+#   - Computation of the total performance and annualized performance of the strategy
+#   - Calculation or returns
+#   - Computation the mean and the volatilty of the returns
+#   - Computation the maximum drawdown
+#   - Computation the sharpe ratio
 
 @dataclass
 class AnalysisTool:
@@ -129,13 +132,21 @@ class AnalysisTool:
             "Sharpe Ratio": self.sharpe_ratio(),  
         }
 
+#Modification of the Backtest class:
+#   - A graph plotting the evolution of the value of the portfolio is saved in the folder \python_project\backtest_analysis\graphs
+#   - A graph plotting the number of buy and sell over time is save in the folder \python_project\backtest_analysis\graphs
+#   - A summary of the strategy analysis is saved in the folder \python_project\backtest_analysis\statistics
+#   - A backtest is saved in the folder \python_project\backtest_analysis\backtests
 
 @dataclass
 class Backtest:
     initial_date: datetime
     final_date: datetime
+    initial_cash: int = 1000000  # Default initial cash  
+    threshold: float = 0.1  
     universe = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'TSLA', 'NVDA', 'INTC', 'CSCO', 'NFLX']
     information_class : type  = Information
+    strategy_name : str 
     s: timedelta = timedelta(days=360)
     time_column: str = 'Date'
     company_column: str = 'ticker'
@@ -143,25 +154,18 @@ class Backtest:
     rebalance_flag_class : type = RebalanceFlag
     rebalance_flag: RebalanceFlag = None
     risk_model : type = StopLoss
-    initial_cash: int = 1000000  # Initial cash in the portfolio
     name_blockchain: str = 'backtest'
     verbose: bool = True
     broker = None
   
     def __post_init__(self):
         self.backtest_name = generate_random_name()
-        self.initial_cash, self.threshold, self.initial_date,self.final_date  = get_initial_parameter()
         self.broker = CustomBroker(cash=self.initial_cash, verbose=self.verbose)
         self.broker.initialize_blockchain(self.name_blockchain)
-                # Get initial cash and other parameters from user
-        self.risk_model_strategy = strategy_choice()  # Store the chosen strategy class for later use
-        self.information_class = self.risk_model_strategy 
         self.rebalance_flag = self.rebalance_flag_class()
 
 
     def run_backtest(self):
-
-        strategy_name = strategy_choice()[1]
 
         evolution_nb_sell = []
         evolution_nb_buy = []
@@ -214,7 +218,7 @@ class Backtest:
         analysis_results = analysis_tool.analyze()
         logging.info(f"Analysis results: {analysis_results}")
 
-        with open(f"backtests_analysis/statistics/analysis_results_{self.backtest_name}({strategy_name}).txt", 'w') as file:
+        with open(f"backtests_analysis/statistics/analysis_results_{self.backtest_name}({self.strategy_name}).txt", 'w') as file:
             for key, value in analysis_results.items():
                 file.write(f"{key}: {value}\n")
 
@@ -226,7 +230,7 @@ class Backtest:
             os.makedirs('backtests')
 
         # save to csv, use the backtest name 
-        df.to_csv(f"backtests_analysis/backtests/baktest_{self.backtest_name}({strategy_name}).csv")
+        df.to_csv(f"backtests_analysis/backtests/baktest_{self.backtest_name}({self.strategy_name}).csv")
 
         # store the backtest in the blockchain
         self.broker.blockchain.add_block(self.backtest_name, df.to_string())
@@ -236,13 +240,13 @@ class Backtest:
         plt.plot(evolution_time, evolution_portfolio_value, label="Portfolio Value", color='blue', marker='o')
         plt.xlabel('Time')
         plt.ylabel('Portfolio Value')
-        plt.title(f"Portfolio Value Evolution from {self.initial_date} to {self.final_date} with {strategy_name}")
+        plt.title(f"Portfolio Value Evolution from {self.initial_date} to {self.final_date} with {self.strategy_name}")
         plt.grid(True)
         plt.xticks(rotation=45)  
         plt.legend()
         plt.tight_layout()  
   
-        plt.savefig(f"backtests_analysis/graphs/Portfolio_Value_Evolution_with_baktest_{self.backtest_name}({strategy_name})", dpi=900)
+        plt.savefig(f"backtests_analysis/graphs/Portfolio_Value_Evolution_with_baktest_{self.backtest_name}({self.strategy_name})", dpi=900)
         plt.show()
 
         # Optionally, plot the number of buys and sells over time
@@ -251,11 +255,11 @@ class Backtest:
         plt.plot(evolution_time, evolution_nb_sell, label="Number of Sells", color='red', marker='x')
         plt.xlabel('Time')
         plt.ylabel('Number of Trades')
-        plt.title(f"Buy and Sell Evolution from {self.initial_date} to {self.final_date} with {strategy_name}")
+        plt.title(f"Buy and Sell Evolution from {self.initial_date} to {self.final_date} with {self.strategy_name}")
         plt.grid(True)
         plt.xticks(rotation=45)
         plt.legend()
         plt.tight_layout()
 
-        plt.savefig(f"backtests_analysis/graphs/Number_Buy_Sell_with_baktest_{self.backtest_name}({strategy_name})", dpi=900)
+        plt.savefig(f"backtests_analysis/graphs/Number_Buy_Sell_with_baktest_{self.backtest_name}({self.strategy_name})", dpi=900)
         plt.show()

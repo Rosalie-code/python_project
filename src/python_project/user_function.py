@@ -2,6 +2,11 @@ import webbrowser
 from datetime import datetime
 
 
+#---------------------------------------------------------
+# Functions
+#---------------------------------------------------------
+
+#   The user can chose between different Asset Allocation strategy  with the function strategy_choice
 def strategy_choice():
     print("Which method would you like to choose?")
     print("1 - First Two Moment")
@@ -31,7 +36,7 @@ def strategy_choice():
     return strategy, strategy_name
 
 
-
+#   The user can leave a comment on GitHub
 def ask_user_for_comment():
     # Ask the user if they want to leave a comment
     choice = input("The aim of this package is to continually improve in order to adapt as closely as possible to users' needs. Would you like to comment on Github which strategy you would like to be developed? ? (yes/no): ").strip().lower()
@@ -47,6 +52,7 @@ def ask_user_for_comment():
         print("Invalid input. Please respond with 'yes' or 'no'.")
 
 
+#   The inital cash, the threshold, the start date and the end date are given by the user with the function get_initial_parameter
 def get_initial_parameter():
     while True:
         try:
@@ -70,8 +76,4 @@ def get_initial_parameter():
     
         except ValueError:
             print("Invalid input. Investment and threshold has to be numeric values and dates has to be in the format YYY-MM-DD")
-<<<<<<< HEAD
   
-=======
-        
->>>>>>> 8c3a1072a4949f45778e06bdbae300a0703b158b

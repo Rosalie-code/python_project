@@ -1,5 +1,3 @@
-#The amin idea here is to add other class that give the user an alternative approach to portfolio construction
-
 #%%
 import yfinance as yf
 import pandas as pd 
@@ -23,6 +21,13 @@ UNIVERSE_SEC = list(StockMapper().ticker_to_cik.keys())
 #---------------------------------------------------------
 # Classes 
 #---------------------------------------------------------
+
+#Extend the possibilities for the user. The user could now chose between different asset allocation strategies:
+#   - Two First Moments from pybacktestchain
+#   - Risk Parity from python_project
+#   - Minimum Variance POrtfolio from python_project
+# The user choice is asked by the function strategy_choice in user_function.py file.
+
 
 # Class that represents the data used in the backtest.   
 
@@ -65,6 +70,7 @@ def compute_information(self, t: datetime):
     information_set['covariance_matrix'] = data.cov().to_numpy()
     information_set['companies'] = data.columns.to_numpy()
     return information_set
+
 
 
 class MinimumVariancePortfolio(Information):
