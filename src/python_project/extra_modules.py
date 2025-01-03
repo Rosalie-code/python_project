@@ -130,3 +130,5 @@ class MinimumVariancePortfolio(Information):
         return information_set
         
     
+        
+    
