@@ -22,11 +22,11 @@ def strategy_choice():
             strategy = FirstTwoMoments
             strategy_name =  "First Two Moment asset allocation strategy"
         elif choice == '2':
-            from extra_modules import RiskParity 
+            from src.python_project.extra_modules import RiskParity 
             strategy =  RiskParity
             strategy_name =  "Risk Parity asset allocation strategy"
         elif choice == '3':
-            from extra_modules import MinimumVariancePortfolio 
+            from src.python_project.extra_modules import MinimumVariancePortfolio 
             strategy = MinimumVariancePortfolio
             strategy_name =  "Minimum Variance Portfolio asset allocation strategy" 
         else:
@@ -57,15 +57,15 @@ def get_initial_parameter():
     while True:
         try:
             initial_cash = int(input("Please enter your initial investment amount: "))
-            stop_loss_threshold = float(input("Please enter your Stop Loss threshold in decimal (ie. for 10% threshold, enter 0,1):"))
+            stop_loss_threshold = float(input("Please enter your Stop Loss threshold in decimal (ie. for 10% threshold, enter 0.1):"))
             if stop_loss_threshold > 1:
                 print("Invalid choice. Please enter decimal number")
-                continue
+                break
 
-            start_date_str = input("Please enter the start date (YYY_MM_DD):")
+            start_date_str = input("Please enter the start date (YYY-MM-DD):")
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
 
-            end_date_str = input("Please enter the start date (YYY_MM_DD):")
+            end_date_str = input("Please enter the end date (YYY-MM-DD):")
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
 
             if end_date <= start_date:

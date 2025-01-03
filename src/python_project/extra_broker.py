@@ -142,11 +142,11 @@ class AnalysisTool:
 class Backtest:
     initial_date: datetime
     final_date: datetime
+    strategy_name : str
     initial_cash: int = 1000000  # Default initial cash  
     threshold: float = 0.1  
     universe = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 'TSLA', 'NVDA', 'INTC', 'CSCO', 'NFLX']
     information_class : type  = Information
-    strategy_name : str 
     s: timedelta = timedelta(days=360)
     time_column: str = 'Date'
     company_column: str = 'ticker'
@@ -163,7 +163,7 @@ class Backtest:
         self.broker = CustomBroker(cash=self.initial_cash, verbose=self.verbose)
         self.broker.initialize_blockchain(self.name_blockchain)
         self.rebalance_flag = self.rebalance_flag_class()
-
+        pass
 
     def run_backtest(self):
 
@@ -199,7 +199,7 @@ class Backtest:
                 prices = info.get_prices(t)
                 self.risk_model.trigger_stop_loss(t, portfolio, prices, self.broker)
            
-            if self.rebalance_flag().time_to_rebalance(t):
+            if self.rebalance_flag.time_to_rebalance(t):
                 logging.info("-----------------------------------")
                 logging.info(f"Rebalancing portfolio at {t}")
                 information_set = info.compute_information(t)
@@ -211,6 +211,8 @@ class Backtest:
                 evolution_nb_buy.append(nb_buy)
                 evolution_nb_sell.append(nb_sell)
                 evolution_time.append(t)
+
+        print(f"CHECKING EVOLUTION OF PORTFOLIO TO IF RUNNING: {evolution_portfolio_value}")
 
         initial_value = self.initial_cash
         final_value = self.broker.get_portfolio_value(info.get_prices(self.final_date))
