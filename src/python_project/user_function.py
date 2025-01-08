@@ -62,10 +62,10 @@ def get_initial_parameter():
                 print("Invalid choice. Please enter decimal number")
                 break
 
-            start_date_str = input("Please enter the start date (YYY-MM-DD):")
+            start_date_str = input("Please enter the start date (YYYY-MM-DD):")
             start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
 
-            end_date_str = input("Please enter the end date (YYY-MM-DD):")
+            end_date_str = input("Please enter the end date (YYYY-MM-DD):")
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
 
             if end_date <= start_date:
