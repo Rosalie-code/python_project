@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.2 (2025-01-08)
+
+### Bug Fixes
+
+- **extra_broker**: Added comments
+  ([`d3b7e06`](https://github.com/Rosalie-code/python_project/commit/d3b7e0666377075e5150ec3efbaa5918eb24eb4e))
+
+
 ## v0.2.1 (2025-01-08)
 
 ### Bug Fixes
