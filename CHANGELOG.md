@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.0 (2025-01-08)
+
+### Features
+
+- **package**: Updated tests. All passed execpt test on execute porfilio function
+  ([`9234d09`](https://github.com/Rosalie-code/python_project/commit/9234d097d1b05a1985aee2eb24c6a8426c80018b))
+
+
 ## v0.1.0 (2025-01-03)
 
 ### Features
