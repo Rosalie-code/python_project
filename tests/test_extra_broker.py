@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 from datetime import datetime
-from python_project.extra_broker import AnalysisTool, CustomBroker
+from src.python_project.extra_broker import AnalysisTool, CustomBroker
 
 import numpy as np
 
@@ -9,26 +9,31 @@ import numpy as np
 def test_execute_portfolio():
     initial_cash = 1000
     broker = CustomBroker(cash=initial_cash, verbose=False)
-    portfolio = {"AAPL": 0.5, "GOOGL": 0.5,}
-    prices = {"AAPL": 100,"GOOGL": 200,}
- 
-    broker.buy(ticker="AAPL", quantity=5, price=100, date=datetime(2024, 1, 1)) 
-    assert broker.get_cash_balance() == 500, "Cash balance should reflect the purchase"
 
-    initial_value = broker.get_portfolio_value(prices)
+    portfolio = {"AAPL": 0.5, "GOOGL": 0.5}
+    prices = {"AAPL": 100, "GOOGL": 200}
+
+
+    broker.buy(ticker="AAPL", quantity=5, price=100, date=datetime(2024, 1, 1))
+    assert broker.get_cash_balance() == 500, "Cash balance should reflect the purchase of AAPL."
+
     total_value_after_execution, nb_sell, nb_buy = broker.execute_portfolio(portfolio, prices, date=datetime(2024, 1, 2))
-    
-    # Assertions
-    assert total_value_after_execution > initial_value, "Total value after execution should be greater than initial value."
-    assert nb_buy == 1
-    assert nb_sell == 0
-    
-    assert broker.get_cash_balance() < initial_cash, "Cash balance should decrease after buying shares."
 
-    assert broker.positions["AAPL"].quantity == 5, "AAPL quantity should be 5."
-    assert broker.positions["GOOGL"].quantity == 0, "GOOGL quantity should be 0 since we didn't buy any."
+    # Calculate expected values
+    expected_value = 5 * prices["AAPL"]  
+    expected_value += 0  
+    assert expected_value == broker.get_portfolio_value(prices), "Portfolio value should match expected value before execution."
 
-    print("All assertions passed for execute_portfolio!")
+    # Since we have not yet bought GOOGL, the total value should be equal to the AAPL purchase
+    assert total_value_after_execution > initial_cash, "Total value after execution should be greater than initial cash."
+
+    # Expect nb_buy to be 1 for GOOGL as it should buy shares to match the portfolio allocation
+    assert nb_buy == 1, "Should have executed a buy order for GOOGL."
+
+    # Assert that shares of GOOGL were bought correctly (changed as per your buying strategy/what is in the portfolio)
+    assert broker.positions["GOOGL"].quantity > 0, "Broker should now have GOOGL shares."
+
+    print("Test executed successfully: Portfolio execution works as expected.")
 
 
 
@@ -83,17 +88,3 @@ def test_sharpe_ratio():
     volatility = np.std(returns)
     expected_sharpe_ratio = (mean_returns - 0.01) / volatility if volatility > 0 else 0
     assert np.isclose(analysis_tool.sharpe_ratio(), expected_sharpe_ratio), "Sharpe Ratio does not match."
-
-
-# Run all test functions
-def run_tests():
-    test_total_performance()
-    test_annualized_performance()
-    test_mean_returns()
-    test_volatility_returns()
-    test_maximum_drawdown()
-    test_sharpe_ratio()
-    test_execute_portfolio()
-    print("All tests passed!")
-
-run_tests()

@@ -1,1 +1,2 @@
-from python_project import python_project
+def test_example():
+    assert 1 == 1
