@@ -23,58 +23,72 @@ from datetime import timedelta, datetime
 class CustomBroker(Broker): 
 # We modify the execute_portfolio function from pybacktestchain.broker to improve it: we add 2 counters to count the number of time we sell and buy. 
 # The function returns the number of time we sell and buy and the total value of the portfolio.
+    
     def execute_portfolio(self, portfolio: dict, prices: dict, date: datetime):
-        nb_buy = 0 
-        nb_sell = 0      
         """Executes the trades for the portfolio based on the generated weights."""
-        # First, handle all the sell orders to free up cash
+        
+        nb_buy = 0  # Initialize buy counter
+        nb_sell = 0  # Initialize sell counter
+
+        # 1) Handle sell orders first to free up cash:
         for ticker, weight in portfolio.items():
             price = prices.get(ticker)
             if price is None:
                 if self.verbose:
                     logging.warning(f"Price for {ticker} not available on {date}")
                 continue
-
+            
             total_value = self.get_portfolio_value(prices)
             target_value = total_value * weight
             current_value = self.positions.get(ticker, Position(ticker, 0, 0)).quantity * price
+
+            # Calculate the difference and determine quantity to trade
             diff_value = target_value - current_value
             quantity_to_trade = int(diff_value / price)
-    
 
+            # Execute selling
             if quantity_to_trade < 0:
                 self.sell(ticker, abs(quantity_to_trade), price, date)
-                nb_sell = nb_sell +1 
-        
-        # Then, handle all the buy orders, checking if there's enough cash
+                nb_sell += 1  # Increment the sell counter
+
+        # 2) Handle buy orders:
         for ticker, weight in portfolio.items():
             price = prices.get(ticker)
             if price is None:
                 if self.verbose:
                     logging.warning(f"Price for {ticker} not available on {date}")
                 continue
-      
+        
             total_value = self.get_portfolio_value(prices)
             target_value = total_value * weight
             current_value = self.positions.get(ticker, Position(ticker, 0, 0)).quantity * price
+
             diff_value = target_value - current_value
             quantity_to_trade = int(diff_value / price)
-
-            
+        
+            # Execute buying
             if quantity_to_trade > 0:
                 available_cash = self.get_cash_balance()
                 cost = quantity_to_trade * price
                 
                 if cost <= available_cash:
                     self.buy(ticker, quantity_to_trade, price, date)
-                    nb_buy = nb_buy +1 
+                    nb_buy += 1  # Increment the buy counter
                 else:
+                    # Handle insufficient cash case
                     if self.verbose:
-                        logging.warning(f"Not enough cash to buy {quantity_to_trade} of {ticker} on {date}. Needed: {cost}, Available: {available_cash}")
-                        logging.info(f"Buying as many shares of {ticker} as possible with available cash.")
+                        logging.warning(f"Not enough cash to buy {quantity_to_trade} of {ticker} on {date}. "
+                                        f"Needed: {cost}, Available: {available_cash}")
+                    
+                    # Buy as many shares as possible with available cash
                     quantity_to_trade = int(available_cash / price)
-                    self.buy(ticker, quantity_to_trade, price, date)
-        total_value_after_execution = self.get_portfolio_value(prices) 
+                    if quantity_to_trade > 0:  # Ensure we can actually buy
+                        self.buy(ticker, quantity_to_trade, price, date)
+                        nb_buy += 1  # Increment the buy counter
+
+        # 3) Calculate total portfolio value after all trades:
+        total_value_after_execution = self.get_portfolio_value(prices)
+
         return total_value_after_execution, nb_sell, nb_buy
 
 
@@ -181,6 +195,7 @@ class Backtest:
         # self.final_date to yyyy-mm-dd format
         final_ = self.final_date.strftime('%Y-%m-%d')
         df = get_stocks_data(self.universe, init_, final_)
+        logging.info(f"Retrieved data:\n{df}") #modification
 
         # Initialize the DataModule
         data_module = DataModule(df)
@@ -203,11 +218,14 @@ class Backtest:
                 logging.info("-----------------------------------")
                 logging.info(f"Rebalancing portfolio at {t}")
                 information_set = info.compute_information(t)
+                print(information_set)
                 portfolio = info.compute_portfolio(t, information_set)
+                print(portfolio)
                 prices = info.get_prices(t)
 
                 value_portfolio_after_execution, nb_sell, nb_buy = self.broker.execute_portfolio(portfolio, prices, t)
                 evolution_portfolio_value.append(value_portfolio_after_execution)
+                logging.info(f"Date: {t}, Portfolio: {portfolio}, Prices: {prices}")
                 evolution_nb_buy.append(nb_buy)
                 evolution_nb_sell.append(nb_sell)
                 evolution_time.append(t)
