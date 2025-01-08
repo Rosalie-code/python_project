@@ -1,0 +1,4 @@
+After running the function run_bactest(), two png files are saved in this location with:
+-the evolution of the portfolio value through time,
+-the evolution of the number of times the algo buys and sells through time.
+

@@ -1,0 +1,9 @@
+After running the function run_bactest(), a text file is saved in this location with portfolio statistics summary:
+- Total performance,
+- Annualized performance,
+- Mean of the returns,
+- Volatility of the returns,
+- Maximum drawdown,
+- Sharpe ratio.
+
+
