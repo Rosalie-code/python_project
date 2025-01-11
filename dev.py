@@ -1,7 +1,7 @@
-from src.python_project.extra_broker import Backtest
+from src.python_project_RD.extra_broker import Backtest
 from pybacktestchain.broker import StopLoss
 from pybacktestchain.blockchain import load_blockchain
-from src.python_project.user_function import get_initial_parameter, strategy_choice, ask_user_for_comment
+from src.python_project_RD.user_function import get_initial_parameter, strategy_choice, ask_user_for_comment
 
 def algo_backtest():
     # Set verbosity for logging
