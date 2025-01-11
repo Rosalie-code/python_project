@@ -3,8 +3,6 @@ from pybacktestchain.broker import StopLoss
 from pybacktestchain.blockchain import load_blockchain
 from src.python_project.user_function import get_initial_parameter, strategy_choice, ask_user_for_comment
 
-
-
 def algo_backtest():
     # Set verbosity for logging
     verbose = False  # Set to True to enable logging, or False to suppress it
