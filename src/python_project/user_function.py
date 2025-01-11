@@ -8,6 +8,23 @@ from datetime import datetime
 
 #   The user can chose between different Asset Allocation strategy  with the function strategy_choice
 def strategy_choice():
+    """Select a Strategy for Asset Allocation.
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    class
+        Class of the choosen strategy
+    str
+        String of the choosen strategy name
+
+    Examples
+    --------
+    >>> strategy, strategy_name = strategy_choice()
+    """
     print("Which method would you like to choose?")
     print("1 - First Two Moment")
     print("2 - Risk Parity")
@@ -38,6 +55,20 @@ def strategy_choice():
 
 #   The user can leave a comment on GitHub
 def ask_user_for_comment():
+    """Ask the user if he wants to post a comment on GitHub discussion page. 
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+
+    Examples
+    --------
+    >>> strategy_choice()
+    """
     # Ask the user if they want to leave a comment
     choice = input("The aim of this package is to continually improve in order to adapt as closely as possible to users' needs. Would you like to comment on Github which strategy you would like to be developed? ? (yes/no): ").strip().lower()
 
@@ -54,6 +85,27 @@ def ask_user_for_comment():
 
 #   The inital cash, the threshold, the start date and the end date are given by the user with the function get_initial_parameter
 def get_initial_parameter():
+    """User selects parameters for running the backtest.
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    int
+        Initial Cash
+    float
+        Threshold leval for the Stop Loss
+    datetime
+        Start date
+    datetime
+        End date
+
+    Examples
+    --------
+    >>> initial_cash, stop_loss_threshold, start_date, end_date = get_initial_parameter()
+    """
+      
     while True:
         try:
             initial_cash = int(input("Please enter your initial investment amount: "))
@@ -76,4 +128,3 @@ def get_initial_parameter():
     
         except ValueError:
             print("Invalid input. Investment and threshold has to be numeric values and dates has to be in the format YYY-MM-DD")
-  

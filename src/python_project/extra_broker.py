@@ -25,7 +25,29 @@ class CustomBroker(Broker):
 # The function returns the number of time we sell and buy and the total value of the portfolio.
     
     def execute_portfolio(self, portfolio: dict, prices: dict, date: datetime):
-        """Executes the trades for the portfolio based on the generated weights."""
+        """Execute trades based on portfolio weights and current prices.
+
+        This method calculates necessary buy and sell trades for assets
+        in the portfolio according to target weights and current market prices.
+
+        Parameters
+        ----------
+        portfolio : dict
+            Tickers as keys and target weights as values.
+        prices : dict
+            Current market prices for each asset, keyed by ticker.
+        date : datetime
+            The date on which trades are executed.
+
+        Returns
+        -------
+        total_value_after_execution : float
+            Total portfolio value after trades.
+        nb_sell : int
+            Number of sell orders executed.
+        nb_buy : int
+            Number of buy orders executed.
+        """
         
         nb_buy = 0  # Initialize buy counter
         nb_sell = 0  # Initialize sell counter
@@ -108,29 +130,78 @@ class AnalysisTool:
         self.risk_free_rate = risk_free_rate
 
     def total_performance(self):
+        """Calculate total portfolio performance.
+
+        Returns
+        -------
+        float
+            Total performance of the portfolio.
+        """
         return (self.final_value - self.initial_value) / self.initial_value
 
     def annualized_performance(self):
+        """Calculate annualized portfolio performance.
+
+        Returns
+        -------
+        float
+            Annualized performance of the portfolio.
+        """
         num_periods = len(self.portfolio_values) 
         return (self.final_value / self.initial_value) ** (1 / num_periods) - 1
 
     def calculate_returns(self):
+        """Calculate the returns of the portfolio.
+
+        Returns
+        -------
+        numpy.ndarray
+            Array of returns for each period.
+        """
         return np.diff(self.portfolio_values) / self.portfolio_values[:-1]
     
     def mean_returns(self):
+        """Calculate the mean return of the portfolio.
+
+        Returns
+        -------
+        float
+            Mean  of returnd. 
+        """
         returns = self.calculate_returns()
         return np.mean(returns)
     
     def volatility_returns(self):
+        """Calculate the volatility of portfolio returns.
+
+        Returns
+        -------
+        float
+            Standard deviation of returns.
+        """
         returns = self.calculate_returns()
         return np.std(returns)
 
     def maximum_drawdown(self):
+        """Calculate the maximum drawdown of the portfolio.
+
+        Returns
+        -------
+        float
+            Maximum drawdown as a fraction.
+        """
         cumulative_max = np.maximum.accumulate(self.portfolio_values)
         drawdowns = (self.portfolio_values - cumulative_max) / cumulative_max
         return drawdowns.min()
 
     def sharpe_ratio(self):
+        """Calculate the Sharpe ratio of the portfolio.
+
+        Returns
+        -------
+        float
+            Sharpe ratio, or 0 if there is no volatility.
+        """
         returns = self.calculate_returns()
         excess_returns = returns - self.risk_free_rate
         return np.mean(excess_returns) / np.std(returns) if np.std(returns) > 0 else 0
@@ -180,6 +251,30 @@ class Backtest:
         pass
 
     def run_backtest(self):
+        """Run the backtest over the specified date range.
+
+        This method executes trades based on the designated strategy, rebalances the portfolio
+        according to the specified conditions, and analyzes portfolio performance over time.
+        It logs important information, generates performance metrics, and creates visualizations
+        of portfolio value and trade activity.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+            The method does not return any value but generates output files,
+            plots, and logs the results of the backtest.
+
+        Notes
+        -----
+        - Analysis results are saved to a text file, transaction logs to CSV, and plots
+          of portfolio evolution are saved as images.
+        - Ensure necessary dependencies are installed and data is available for the universe
+          of stocks defined in the class.
+        """
 
         evolution_nb_sell = []
         evolution_nb_buy = []
@@ -229,8 +324,6 @@ class Backtest:
                 evolution_nb_buy.append(nb_buy)
                 evolution_nb_sell.append(nb_sell)
                 evolution_time.append(t)
-
-        print(f"CHECKING EVOLUTION OF PORTFOLIO TO IF RUNNING: {evolution_portfolio_value}")
 
         initial_value = self.initial_cash
         final_value = self.broker.get_portfolio_value(info.get_prices(self.final_date))

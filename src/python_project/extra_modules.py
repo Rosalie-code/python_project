@@ -33,6 +33,26 @@ UNIVERSE_SEC = list(StockMapper().ticker_to_cik.keys())
 
 class RiskParity(Information):
     def compute_portfolio(self, t: datetime, information_set):
+        """Calculate asset allocation based on volatility.
+
+        Parameters
+        ----------
+        t : datetime
+            The timestamp for portfolio computation.
+        information_set : dict
+            Dictionary containing 'covariance_matrix' (2D array-like) and 'companies' (list of company names).
+
+        Returns
+        -------
+        dict
+            A portfolio dictionary with company names as keys and their weights as values.
+            Returns equal weight portfolio if information is invalid.
+
+        Examples
+        --------
+        >>> portfolio = compute_portfolio(datetime.now(), information_set)
+        """
+
         try:
             # Ensure that information_set is valid and contains the expected keys
             if not information_set or 'covariance_matrix' not in information_set or 'companies' not in information_set:
@@ -54,6 +74,19 @@ class RiskParity(Information):
             return self.equal_weight_portfolio(information_set)
     
     def equal_weight_portfolio(self, information_set):
+        """Create an equal weight portfolio.
+
+        Parameters
+        ----------
+        information_set : dict
+            Dictionary containing 'companies' (list of company names).
+
+        Returns
+        -------
+        dict
+            A portfolio with equal weights assigned to each company.
+            Returns an empty dictionary if no companies are provided.
+        """
         if not information_set or 'companies' not in information_set:
             logging.warning("Information set is missing companies. Defaulting to empty portfolio.")
             return {}
@@ -62,6 +95,18 @@ class RiskParity(Information):
         return {k: 1/num_companies for k in information_set['companies']}
 
     def compute_information(self, t: datetime):
+        """Compute information set for portfolio calculation.
+
+        Parameters
+        ----------
+        t : datetime
+            The timestamp for fetching relevant data.
+
+        Returns
+        -------
+        dict
+            A dictionary containing 'covariance_matrix' and 'expected_return'.
+        """
         data = self.slice_data(t)
         information_set = {}
         data['return'] = data.groupby(self.company_column)[self.adj_close_column].pct_change()
@@ -85,6 +130,24 @@ class RiskParity(Information):
 
 class MinimumVariancePortfolio(Information):
     def compute_portfolio(self, t: datetime, information_set):
+        """Compute the minimum variance portfolio.
+
+        This method optimizes the asset weights to minimize portfolio variance, subject to the constraint
+        that the sum of the weights equals 1, and no short selling is allowed.
+
+        Parameters
+        ----------
+        t : datetime
+            The timestamp for the portfolio computation.
+        information_set : dict
+            Dictionary containing 'covariance_matrix' (2D array-like) and 'companies' (list of company names).
+
+        Returns
+        -------
+        dict
+            A portfolio dictionary with company names as keys and their weights as values.
+            Returns equal weight portfolio if there is an error during optimization or if information is invalid.
+        """
         try:
             Sigma = information_set['covariance_matrix']
             n = Sigma.shape[0]
@@ -108,6 +171,22 @@ class MinimumVariancePortfolio(Information):
             return {k: 1/len(information_set['companies']) for k in information_set['companies']}
         
     def compute_information(self, t: datetime):
+        """Compute the information set for portfolio optimization.
+
+        This method retrieves historical data, computes the expected returns and the covariance matrix
+        of the asset returns, and prepares the information set for portfolio calculations.
+
+        Parameters
+        ----------
+        t : datetime
+            The timestamp for fetching relevant data.
+
+        Returns
+        -------
+        dict
+            A dictionary containing 'covariance_matrix' and 'expected_return' of the assets 
+            as well as their respective names.
+        """
         data = self.slice_data(t)
         information_set = {}
         data = data.sort_values(by=[self.company_column, self.time_column])
