@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.4.0 (2025-01-11)
+
+### Features
+
+- **packages**: Change the name from python_project to python_project_RD in order to be able to
+  publish on PyPI.
+  ([`ee623aa`](https://github.com/Rosalie-code/python_project/commit/ee623aad0c37ba53057bc8c456ef09ca93a40422))
+
+
 ## v0.3.0 (2025-01-11)
 
 ### Features
