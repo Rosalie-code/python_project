@@ -1,6 +1,30 @@
 # CHANGELOG
 
 
+## v0.2.3 (2025-01-11)
+
+### Bug Fixes
+
+- **README.md**: Added an example of usage
+  ([`2e59adf`](https://github.com/Rosalie-code/python_project/commit/2e59adf3834b5cd96bf8794f2707c844e2f4fa97))
+
+
+## v0.2.2 (2025-01-08)
+
+### Bug Fixes
+
+- **extra_broker**: Added comments
+  ([`d3b7e06`](https://github.com/Rosalie-code/python_project/commit/d3b7e0666377075e5150ec3efbaa5918eb24eb4e))
+
+
+## v0.2.1 (2025-01-08)
+
+### Bug Fixes
+
+- **user_function**: Corrected small typo
+  ([`ab57847`](https://github.com/Rosalie-code/python_project/commit/ab57847daa2b27f31ff7c65233bec7c2975c8c3c))
+
+
 ## v0.2.0 (2025-01-08)
 
 ### Features
