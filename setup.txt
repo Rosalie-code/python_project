@@ -1,0 +1,35 @@
+@echo off
+
+# Check if the conda environment exists
+conda env list | findstr "python_project" >nul
+if %errorlevel% neq 0 (
+    REM Create the environment if it doesn't exist
+    conda create --name python_project python=3.11 
+)
+
+# Activate the conda environment
+call conda activate python_project
+
+# Install pybacktestchain using pip
+pip install pybacktestchain
+
+# Install cookiecutter using conda-forge
+conda install -c conda-forge cookiecutter -y
+
+# Install poetry using pip
+pip install poetry
+
+# Add python-semantic-release to the development group using poetry
+poetry add --group dev python-semantic-release
+
+# Append configuration for python-semantic-release to pyproject.toml
+echo [tool.semantic_release] >> pyproject.toml
+echo version_variable = "pyproject.toml:version" >> pyproject.toml
+echo version_toml = [ >> pyproject.toml
+echo "pyproject.toml:tool.poetry.version", >> pyproject.toml
+echo ] >> pyproject.toml
+
+REM Install the dependencies defined in pyproject.toml
+poetry install
+
+echo Script execution complete.
