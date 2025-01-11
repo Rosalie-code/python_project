@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.3.0 (2025-01-11)
+
+### Features
+
+- **organization**: Reorganized the code for testing, removed some useless files
+  ([`ac6f4f2`](https://github.com/Rosalie-code/python_project/commit/ac6f4f2d766ea474d075a4b851d5d3ad7a4bcbcb))
+
+
 ## v0.2.3 (2025-01-11)
 
 ### Bug Fixes
