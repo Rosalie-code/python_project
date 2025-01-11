@@ -24,8 +24,8 @@ UNIVERSE_SEC = list(StockMapper().ticker_to_cik.keys())
 
 #Extend the possibilities for the user. The user could now chose between different asset allocation strategies:
 #   - Two First Moments from pybacktestchain
-#   - Risk Parity from python_project
-#   - Minimum Variance POrtfolio from python_project
+#   - Risk Parity from python_project_RD
+#   - Minimum Variance POrtfolio from python_project_RD
 # The user choice is asked by the function strategy_choice in user_function.py file.
 
 

@@ -6,7 +6,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u"python_project"
+project = u"python_project_RD"
 copyright = u"2024, Rosalie Dechance"
 author = u"Rosalie Dechance"
 

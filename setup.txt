@@ -1,14 +1,14 @@
 @echo off
 
 # Check if the conda environment exists
-conda env list | findstr "python_project" >nul
+conda env list | findstr "python_project_RD" >nul
 if %errorlevel% neq 0 (
     REM Create the environment if it doesn't exist
-    conda create --name python_project python=3.11 
+    conda create --name python_project_RD python=3.11 
 )
 
 # Activate the conda environment
-call conda activate python_project
+call conda activate python_project_RD
 
 # Install pybacktestchain using pip
 pip install pybacktestchain

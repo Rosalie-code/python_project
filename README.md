@@ -1,4 +1,4 @@
-# Project: project_python
+# Project: python_project_RD
 
 ## Purposes
 Improve the package pybacktestchain by:
@@ -8,7 +8,7 @@ Improve the package pybacktestchain by:
 2) **Extending the analysis for the user (extra_broker.py)**:
     - Created the `CustomBroker` subclass from the `Broker` class of pybacktestchain in order to modify the `execute_portfolio` function,
     - Developed the `AnalysisTool` class, which computes different statistics for portfolio analysis,
-    - Modified `Backtest` class so that after running the `run_backtest()` function,  CSV, PNG, and TXT files are saved in the  `\python_project\backtest_analysis` directory, providing users with additional analysis on the backtest.
+    - Modified `Backtest` class so that after running the `run_backtest()` function,  CSV, PNG, and TXT files are saved in the  `\python_project_RD\backtest_analysis` directory, providing users with additional analysis on the backtest.
 3) **Being participative and user-friendly (user_function.py)**:
     - Created `strategy_choice()` function to allow users to choose a strategy for the backtest among several options,
     - Created `ask_user_for_comment()` function enabling users to leave a comment on the project's discussions page on GitHub,
@@ -20,7 +20,7 @@ Overall, this package enables users to create tailored and bespoke backtests on 
 ## Installation
 
 ```bash
-$ pip install python_project
+$ pip install python_project_RD
 ```
 
 
@@ -61,11 +61,11 @@ Interested in contributing? Check out the contributing guidelines. Please note t
 
 ## License
 
-`python_project` was created by Rosalie Dechance. This same package is based on the `pybacktestchain` package created by by Juan F. Imbet as part of a project for the course Python Programming for Finance at Paris Dauphine University - PSL. 
+`python_project_RD` was created by Rosalie Dechance. This same package is based on the `pybacktestchain` package created by by Juan F. Imbet as part of a project for the course Python Programming for Finance at Paris Dauphine University - PSL. 
 
 
 It is licensed under the terms of the MIT license.
 
 ## Credits
 
-`python_project` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter).
+`python_project_RD` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter).

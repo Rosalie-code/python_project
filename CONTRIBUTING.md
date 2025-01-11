@@ -40,10 +40,10 @@ If you are proposing a feature:
 
 ## Get Started!
 
-Ready to contribute? Here's how to set up `python_project` for local development.
+Ready to contribute? Here's how to set up `python_project_RD` for local development.
 
-1. Download a copy of `python_project` locally.
-2. Install `python_project` using `poetry`:
+1. Download a copy of `python_project_RD` locally.
+2. Install `python_project_RD` using `poetry`:
 
     ```console
     $ poetry install
@@ -69,5 +69,5 @@ Before you submit a pull request, check that it meets these guidelines:
 
 ## Code of Conduct
 
-Please note that the `python_project` project is released with a
+Please note that the `python_project_RD` project is released with a
 Code of Conduct. By contributing to this project you agree to abide by its terms.

@@ -39,11 +39,11 @@ def strategy_choice():
             strategy = FirstTwoMoments
             strategy_name =  "First Two Moment asset allocation strategy"
         elif choice == '2':
-            from src.python_project.extra_modules import RiskParity 
+            from src.python_project_RD.extra_modules import RiskParity 
             strategy =  RiskParity
             strategy_name =  "Risk Parity asset allocation strategy"
         elif choice == '3':
-            from src.python_project.extra_modules import MinimumVariancePortfolio 
+            from src.python_project_RD.extra_modules import MinimumVariancePortfolio 
             strategy = MinimumVariancePortfolio
             strategy_name =  "Minimum Variance Portfolio asset allocation strategy" 
         else:
@@ -75,7 +75,7 @@ def ask_user_for_comment():
     if choice == 'yes':
         # Redirect to GitHub Discussions page with URL
         print("Great! Please visit the GitHub discussions page to leave your comment.")
-        discussion_url = "https://github.com/Rosalie-code/python_project/discussions"
+        discussion_url = "https://github.com/Rosalie-code/python_project_RD/discussions"
         webbrowser.open(discussion_url)  # Open the Discussions page in the default web browser
     elif choice == 'no':
         print("Okay, no comment will be left.")

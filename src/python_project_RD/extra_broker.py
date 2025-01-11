@@ -218,10 +218,10 @@ class AnalysisTool:
         }
 
 #Modification of the Backtest class:
-#   - A graph plotting the evolution of the value of the portfolio is saved in the folder \python_project\backtest_analysis\graphs
-#   - A graph plotting the number of buy and sell over time is save in the folder \python_project\backtest_analysis\graphs
-#   - A summary of the strategy analysis is saved in the folder \python_project\backtest_analysis\statistics
-#   - A backtest is saved in the folder \python_project\backtest_analysis\backtests
+#   - A graph plotting the evolution of the value of the portfolio is saved in the folder \python_project_RD\backtest_analysis\graphs
+#   - A graph plotting the number of buy and sell over time is save in the folder \python_project_RD\backtest_analysis\graphs
+#   - A summary of the strategy analysis is saved in the folder \python_project_RD\backtest_analysis\statistics
+#   - A backtest is saved in the folder \python_project_RD\backtest_analysis\backtests
 
 @dataclass
 class Backtest:

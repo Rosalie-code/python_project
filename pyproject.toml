@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "python_project"
+name = "python_project_RD"
 version = "0.3.0"
 description = "This project is based on pybacktestchain but new functionalities have been added!"
 authors = ["Rosalie Dechance"]
@@ -30,3 +30,6 @@ version_toml = [
 [tool.semantic_release.group]
 production = ["master"]  
 staging = ["draft"] 
+
+[project.urls]
+Homepage = "https://github.com/Rosalie-code/python_project_RD"
