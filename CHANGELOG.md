@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.5.0 (2025-01-12)
+
+### Features
+
+- **README.md**: Updated README.md file.
+  ([`74ee380`](https://github.com/Rosalie-code/python_project/commit/74ee3804b6d3fc66d8caf56e8c756631c15f7128))
+
+
 ## v0.4.0 (2025-01-11)
 
 ### Features
