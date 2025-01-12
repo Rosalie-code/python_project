@@ -28,6 +28,10 @@ $ pip install python_project_RD
 
 ```python
 
+from src.python_project_RD.extra_broker import Backtest
+from pybacktestchain.broker import StopLoss
+from src.python_project_RD.user_function import get_initial_parameter, strategy_choice, ask_user_for_comment
+
 # Enable or disable logging verbosity
 verbose = False  # Set to True to enable logging, or False to suppress it
 
@@ -38,15 +42,15 @@ ask_user_for_comment() # Prompt the user for additional comments regarding the b
 
 # Create a customized backtest instance with user-defined parameters
 backtest = Backtest(
-    initial_date=start_date,          # Start date for the backtesting period
-    final_date=end_date,              # End date for the backtesting period
-    initial_cash=initial_cash,        # Initial cash amount for the backtest
-    threshold=stop_loss_threshold,     # Stop loss threshold for risk management
-    information_class=strategy,       # Selected strategy class for the backtest
-    strategy_name=strategy_name,      # User-defined name for the selected strategy
-    risk_model=StopLoss,               # Risk model used in the backtest (e.g., Stop Loss)
-    name_blockchain='backtest',        # Name identifier for the backtest instance
-    verbose=verbose                    # Logging verbosity setting
+    initial_date=start_date,          
+    final_date=end_date,              
+    initial_cash=initial_cash,        
+    threshold=stop_loss_threshold,     
+    information_class=strategy,       
+    strategy_name=strategy_name,      
+    risk_model=StopLoss,               
+    name_blockchain='backtest',        
+    verbose=verbose                 
 )
 
 # Execute the backtest with the specified parameters
